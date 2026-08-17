@@ -23,7 +23,7 @@ pub enum Expression {
 }
 
 
-pub fn parse(tokens: &[Token]) {
+pub fn parse(tokens: &[Token]) -> Program {
 
     let mut  position = 0;
     println!("IN PARSER");
@@ -39,15 +39,16 @@ pub fn parse(tokens: &[Token]) {
         }
     }
 
-    match &tokens[position] {
+    let function_name = match &tokens[position] {
         Token::Identifier(name) => {
             println!("Identified is: {:?}", name);
             position += 1;
+            name.clone()
         }
         _ => {
             panic!("Expected identifier!")
         }
-    }
+    };
 
     match &tokens[position] {
         Token::OpenParenthesis => {
@@ -108,16 +109,19 @@ pub fn parse(tokens: &[Token]) {
         }
     }
 
-    match &tokens[position] {
+    let constant = match &tokens[position] {
         Token::Constant(constant) => {
 
             println!("Constant found: {:?}", constant);
             position += 1;
+
+            //this will set the value of constant tp the actual i32
+            *constant
         }
         _ => {
             panic!("Expected constant keyword!")
         }
-    }
+    };
 
     match &tokens[position] {
 
@@ -146,4 +150,19 @@ pub fn parse(tokens: &[Token]) {
         panic!("Unexpected tokens after end of program");
     }
 
+
+    let expression = Expression::Constant(constant);
+
+    let statement = Statement::Return(expression);
+
+    let function = Function {
+        name: function_name,
+        body: statement,
+    };
+
+    let program = Program {
+        function,
+    };
+
+    program
 }

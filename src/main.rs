@@ -14,6 +14,7 @@ fn main() {
         .expect("Failed to read source file");
 
     let tokens = lexer::lex(&source);
-    parser::parse(&tokens);
-    println!("{:#?}", tokens);
+    let program = parser::parse(&tokens);
+
+    println!("{:#?}", program);
 }
