@@ -1,4 +1,5 @@
 mod lexer;
+mod parser;
 
 use std::env;
 use std::fs;
@@ -13,6 +14,6 @@ fn main() {
         .expect("Failed to read source file");
 
     let tokens = lexer::lex(&source);
-
+    parser::parse(&tokens);
     println!("{:#?}", tokens);
 }
